@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StoryFlow MVP</title>
+  <meta name="theme-color" content="#080b12" />
+  <title>StoryFlow AI</title>
   <style>
     :root {
       --bg: #080b12;
@@ -13,98 +13,282 @@
       --text: #f4f7fb;
       --muted: #9eabc0;
       --accent: #7c5cff;
+      --accent2: #a995ff;
       --border: #283247;
       --ok: #56d6a1;
+      --danger: #ff6b7a;
     }
+
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
-      background: radial-gradient(circle at top, #17213a 0, var(--bg) 36%);
-      color: var(--text);
       min-height: 100vh;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top, #17213a 0, var(--bg) 34%);
     }
-    .shell { max-width: 1000px; margin: auto; padding: 22px 16px 60px; }
-    header { padding: 12px 0 20px; }
-    .brand { font-size: 28px; font-weight: 850; letter-spacing: -0.8px; }
-    .brand span { color: #a995ff; }
-    .tagline { color: var(--muted); margin-top: 7px; line-height: 1.45; }
-    .grid { display: grid; gap: 16px; }
+
+    button, input, textarea, select { font: inherit; }
+
+    .shell {
+      width: min(1120px, 100%);
+      margin: auto;
+      padding: 22px 16px 70px;
+    }
+
+    header { padding: 10px 0 20px; }
+
+    .brand {
+      font-size: clamp(28px, 8vw, 42px);
+      font-weight: 900;
+      letter-spacing: -1.2px;
+    }
+
+    .brand span { color: var(--accent2); }
+
+    .tagline {
+      color: var(--muted);
+      line-height: 1.55;
+      margin-top: 8px;
+    }
+
+    .workspace {
+      display: grid;
+      gap: 16px;
+    }
+
     .panel {
-      background: rgba(17,23,36,.94);
+      background: rgba(17, 23, 36, .95);
       border: 1px solid var(--border);
-      border-radius: 18px;
+      border-radius: 20px;
       padding: 16px;
-      box-shadow: 0 15px 40px rgba(0,0,0,.22);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .25);
     }
-    label { display: block; font-weight: 700; margin: 0 0 8px; }
+
+    label {
+      display: block;
+      margin: 0 0 8px;
+      font-weight: 800;
+    }
+
     textarea, input, select {
       width: 100%;
       border: 1px solid var(--border);
       background: #0c111c;
       color: var(--text);
-      border-radius: 12px;
+      border-radius: 13px;
       padding: 13px;
-      font: inherit;
       outline: none;
     }
-    textarea { min-height: 230px; resize: vertical; line-height: 1.5; }
-    textarea:focus, input:focus, select:focus { border-color: var(--accent); }
-    .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+
+    textarea {
+      min-height: 240px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+
+    textarea:focus, input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(124, 92, 255, .12);
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
     .full { grid-column: 1 / -1; }
+
+    .actions {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
     button {
       border: 0;
       border-radius: 12px;
-      padding: 13px 16px;
-      font-weight: 800;
+      padding: 12px 15px;
+      font-weight: 850;
       cursor: pointer;
-      font-size: 15px;
     }
-    .primary { background: linear-gradient(135deg, #6b4cff, #927aff); color: white; }
-    .secondary { background: #232c40; color: white; border: 1px solid #35415a; }
-    .actions { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
-    .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin: 14px 0; }
-    .stat { background: var(--panel2); padding: 12px; border-radius: 12px; border: 1px solid var(--border); }
-    .stat strong { display:block; font-size:22px; }
+
+    .primary {
+      color: #fff;
+      background: linear-gradient(135deg, #6746ff, #947dff);
+    }
+
+    .secondary {
+      color: #fff;
+      background: #232c40;
+      border: 1px solid #35415a;
+    }
+
+    .danger {
+      color: #fff;
+      background: rgba(255, 107, 122, .12);
+      border: 1px solid rgba(255, 107, 122, .4);
+    }
+
+    .small-btn {
+      padding: 8px 10px;
+      font-size: 13px;
+    }
+
+    .note, .saved {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 11px;
+      line-height: 1.45;
+    }
+
+    .saved {
+      color: var(--ok);
+      min-height: 20px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 15px 0;
+    }
+
+    .stat {
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 12px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 22px;
+    }
+
     .stat small { color: var(--muted); }
-    #results { display: grid; gap: 12px; }
-    .scene { background: #0c111c; border: 1px solid var(--border); border-radius: 15px; padding: 14px; }
-    .scene-head { display:flex; align-items:center; justify-content:space-between; gap: 8px; margin-bottom:10px; }
-    .scene-title { font-weight: 850; }
-    .badge { color: var(--ok); background: rgba(86,214,161,.1); padding: 5px 8px; border-radius: 999px; font-size: 12px; }
-    .scene p { margin: 8px 0; color: #d7deeb; line-height:1.48; }
-    .scene b { color:white; }
+
+    #results {
+      display: grid;
+      gap: 13px;
+      margin-top: 15px;
+    }
+
+    .scene {
+      background: #0c111c;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      padding: 14px;
+    }
+
+    .scene-head {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .scene-title {
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .badge {
+      color: var(--ok);
+      background: rgba(86, 214, 161, .1);
+      border: 1px solid rgba(86, 214, 161, .15);
+      padding: 6px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+    }
+
+    .scene p {
+      color: #d9e0eb;
+      line-height: 1.55;
+      margin: 9px 0;
+    }
+
+    .scene b { color: #fff; }
+
+    .visual-box {
+      background: #131a27;
+      border: 1px solid #242e42;
+      border-radius: 10px;
+      padding: 11px;
+      line-height: 1.55;
+      color: #e5eaf4;
+    }
+
     .prompt {
-      background: #141b29;
-      border-left: 3px solid var(--accent);
-      padding: 10px;
-      border-radius: 8px;
-      color: #dfe5f1;
-      line-height: 1.5;
+      background: #151d2b;
+      border-left: 4px solid var(--accent);
+      border-radius: 9px;
+      padding: 12px;
+      color: #e1e7f1;
+      line-height: 1.55;
       white-space: pre-wrap;
+      margin-top: 10px;
     }
-    .empty { color: var(--muted); text-align:center; padding: 30px 10px; }
-    .note { color:var(--muted); font-size:13px; margin-top:10px; }
-    @media(min-width:800px){
-      .workspace { grid-template-columns: .9fr 1.1fr; align-items:start; }
-      .left { position: sticky; top: 16px; }
+
+    .scene-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 12px;
     }
-    @media(max-width:560px){
-      .controls, .stats { grid-template-columns:1fr; }
+
+    .editor {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .editor textarea { min-height: 105px; }
+
+    .hidden { display: none !important; }
+
+    .empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 38px 12px;
+    }
+
+    @media (min-width: 850px) {
+      .workspace {
+        grid-template-columns: .9fr 1.1fr;
+        align-items: start;
+      }
+
+      .left {
+        position: sticky;
+        top: 16px;
+      }
+    }
+
+    @media (max-width: 580px) {
+      .controls, .stats { grid-template-columns: 1fr; }
+      .actions button { flex: 1 1 145px; }
     }
   </style>
 </head>
 <body>
   <main class="shell">
     <header>
-      <div class="brand">Story<span>Flow</span> MVP</div>
-      <div class="tagline">Convierte un guion en escenas, prompts visuales y movimientos listos para producción.</div>
+      <div class="brand">Story<span>Flow</span> AI</div>
+      <div class="tagline">Convierte un guion en escenas, descripciones visuales y prompts listos para vídeos sin rostro.</div>
     </header>
 
-    <section class="grid workspace">
+    <section class="workspace">
       <div class="panel left">
         <label for="script">Guion o narración</label>
-        <textarea id="script" placeholder="Pega aquí tu guion completo...">En 1971, un hombre misterioso subió a un avión en Portland usando un traje oscuro. Entregó una nota a una azafata y aseguró que llevaba una bomba. Exigió dinero y paracaídas. Horas después, saltó del avión durante una tormenta y desapareció para siempre.</textarea>
+        <textarea id="script" placeholder="Pega aquí tu guion completo..."></textarea>
 
         <div class="controls">
           <div>
@@ -112,9 +296,10 @@
             <select id="format">
               <option value="vertical 9:16">Vertical 9:16</option>
               <option value="horizontal 16:9">Horizontal 16:9</option>
-              <option value="square 1:1">Cuadrado 1:1</option>
+              <option value="cuadrado 1:1">Cuadrado 1:1</option>
             </select>
           </div>
+
           <div>
             <label for="seconds">Segundos por escena</label>
             <select id="seconds">
@@ -123,24 +308,29 @@
               <option value="10">10 segundos</option>
             </select>
           </div>
+
           <div class="full">
             <label for="style">Biblia visual</label>
-            <input id="style" value="cómic noir editorial, paleta azul-gris fría, líneas de tinta pesadas, textura de papel granulado, un único acento cálido, iluminación cinematográfica, sin texto" />
+            <input id="style" value="Ilustración estilo cómic noir editorial, paleta azul-gris fría, líneas de tinta pesadas, textura de papel granulado, un único acento cálido, iluminación cinematográfica, sin texto" />
           </div>
         </div>
 
         <div class="actions">
           <button class="primary" onclick="generateScenes()">Generar storyboard</button>
           <button class="secondary" onclick="loadDemo()">Cargar ejemplo</button>
+          <button class="secondary" onclick="saveProject()">Guardar proyecto</button>
+          <button class="secondary" onclick="loadProject()">Recuperar proyecto</button>
         </div>
-        <div class="note">Esta primera versión funciona sin API y sin coste. La división es automática y editable.</div>
+
+        <div id="saveStatus" class="saved"></div>
+        <div class="note">Esta versión funciona sin API y permite editar, copiar, reordenar, eliminar y exportar escenas.</div>
       </div>
 
       <div class="panel">
         <div class="scene-head">
           <div>
             <div class="scene-title">Storyboard</div>
-            <div class="tagline">Resultado estructurado del proyecto</div>
+            <div class="tagline">Escenas ordenadas y editables</div>
           </div>
         </div>
 
@@ -151,142 +341,427 @@
         </div>
 
         <div class="actions">
-          <button class="secondary" onclick="copyAll()">Copiar todos los prompts</button>
+          <button class="secondary" onclick="copyAll()">Copiar todos</button>
           <button class="secondary" onclick="downloadJSON()">Exportar JSON</button>
+          <button class="secondary" onclick="downloadTXT()">Exportar TXT</button>
+          <button class="danger" onclick="clearAll()">Vaciar</button>
         </div>
 
-        <div id="results"><div class="empty">Pulsa “Generar storyboard” para comenzar.</div></div>
+        <div id="results">
+          <div class="empty">Pega un guion y pulsa “Generar storyboard”.</div>
+        </div>
       </div>
     </section>
   </main>
 
-<script>
-let currentScenes = [];
+  <script>
+    let currentScenes = [];
 
-const movements = [
-  "cámara fija, movimiento ambiental sutil",
-  "travelling lento hacia adelante",
-  "paneo lateral suave",
-  "primer plano con leve respiración de cámara",
-  "zoom lento y cinematográfico",
-  "plano general estático con elementos secundarios en movimiento"
-];
+    const movements = [
+      "cámara fija con movimiento ambiental sutil",
+      "travelling lento hacia adelante",
+      "paneo lateral suave",
+      "primer plano con leve respiración de cámara",
+      "zoom lento y cinematográfico",
+      "plano general estático con elementos secundarios en movimiento"
+    ];
 
-function cleanText(t) {
-  return t.replace(/\s+/g, " ").trim();
-}
+    function cleanText(text) {
+      return text.replace(/\s+/g, " ").trim();
+    }
 
-function splitIntoScenes(text) {
-  const cleaned = cleanText(text);
-  if (!cleaned) return [];
-  let parts = cleaned.split(/(?<=[.!?])\s+/).filter(Boolean);
+    function splitIntoScenes(text) {
+      const cleaned = cleanText(text);
+      if (!cleaned) return [];
 
-  const scenes = [];
-  parts.forEach(part => {
-    const words = part.split(" ");
-    if (words.length <= 28) {
-      scenes.push(part);
-    } else {
-      for (let i = 0; i < words.length; i += 24) {
-        scenes.push(words.slice(i, i + 24).join(" "));
+      const sentences = cleaned
+        .split(/(?<=[.!?])\s+/)
+        .map(item => item.trim())
+        .filter(Boolean);
+
+      const scenes = [];
+
+      sentences.forEach(sentence => {
+        const words = sentence.split(/\s+/);
+
+        if (words.length <= 30) {
+          scenes.push(sentence);
+          return;
+        }
+
+        for (let i = 0; i < words.length; i += 26) {
+          scenes.push(words.slice(i, i + 26).join(" "));
+        }
+      });
+
+      return scenes;
+    }
+
+    function includesAny(text, terms) {
+      return terms.some(term => text.includes(term));
+    }
+
+    function buildVisualDescription(narration) {
+      const text = narration.toLowerCase();
+
+      if (includesAny(text, ["llamada", "operadora", "emergencias", "central"])) {
+        return "Interior nocturno de una central de emergencias, una operadora sostiene un auricular mientras escucha en silencio, lluvia golpeando las ventanas, luces tenues y ambiente inquietante.";
+      }
+
+      if (includesAny(text, ["casa abandonada", "apartamento vacío", "edificio vacío", "luz encendida"])) {
+        return "Exterior nocturno de una vivienda abandonada bajo una tormenta, fachada deteriorada, una sola ventana iluminada, lluvia fina, árboles oscuros y sombras profundas.";
+      }
+
+      if (includesAny(text, ["policía", "policías", "agentes", "investigadores"])) {
+        return "Dos agentes avanzan con cautela hacia una vivienda oscura, ropa mojada por la lluvia, linternas encendidas y siluetas tensas recortadas contra la noche.";
+      }
+
+      if (includesAny(text, ["camino", "barro", "sendero"])) {
+        return "Camino estrecho cubierto de barro durante una noche tormentosa, huellas recientes, vegetación movida por el viento y una vivienda oscura al fondo.";
+      }
+
+      if (includesAny(text, ["puerta", "entrada", "cerradura"])) {
+        return "Entrada de una vivienda antigua en penumbra, puerta cerrada, pintura desgastada, sombras largas y una sensación de amenaza detrás del umbral.";
+      }
+
+      if (includesAny(text, ["teléfono descolgado", "auricular descolgado"])) {
+        return "Interior de un apartamento vacío, teléfono antiguo descolgado sobre una mesa, cable retorcido, luz baja y sombras que sugieren que alguien acaba de marcharse.";
+      }
+
+      if (includesAny(text, ["taza de café", "café caliente", "humeante"])) {
+        return "Primer plano de una taza de café todavía humeante sobre una mesa dentro de una vivienda vacía, único acento cálido rodeado de tonos fríos y silencio inquietante.";
+      }
+
+      if (includesAny(text, ["pasillo", "habitaciones", "revisaron", "registraron"])) {
+        return "Pasillo interior oscuro con varias puertas abiertas, agentes inspeccionando la vivienda con linternas, paredes envejecidas y sombras marcadas.";
+      }
+
+      if (includesAny(text, ["susurró", "susurro", "voz", "respiración"])) {
+        return "Primer plano inquietante de un teléfono mientras una voz apenas audible emerge de la línea, habitación oscura, atmósfera densa y terror contenido.";
+      }
+
+      if (includesAny(text, ["cama", "dormitorio", "almohada"])) {
+        return "Dormitorio perfectamente ordenado en una vivienda aparentemente vacía, cama intacta, encuadre simétrico, iluminación tenue y amenaza invisible.";
+      }
+
+      if (includesAny(text, ["fotografía", "foto", "imagen recién tomada"])) {
+        return "Primer plano de una fotografía recién tomada colocada sobre una almohada, mostrando a los investigadores dentro de la misma vivienda, enfoque dramático y detalle imposible.";
+      }
+
+      if (includesAny(text, ["reloj", "hora", "3:22", "3:17"])) {
+        return "Primer plano de un reloj marcando una hora exacta, segundero detenido en un instante decisivo, iluminación dramática y sensación de tiempo congelado.";
+      }
+
+      if (includesAny(text, ["sonar", "sonó", "timbre", "teléfono comenzó"])) {
+        return "Teléfono antiguo sonando solo en una habitación vacía, composición tensa, sombras profundas y silencio roto por el timbre.";
+      }
+
+      if (includesAny(text, ["línea desconectada", "desconectada", "sin servicio"])) {
+        return "Detalle del cable telefónico desconectado junto a un aparato que continúa activo, habitación vacía y una imposibilidad sobrenatural evidente.";
+      }
+
+      if (includesAny(text, ["tormenta", "lluvia", "relámpago"])) {
+        return "Noche de tormenta con lluvia intensa, relámpagos iluminando brevemente edificios oscuros y calles desiertas, ambiente de suspense.";
+      }
+
+      return "Escena cinematográfica que representa el momento narrado, composición clara, ambiente de misterio, iluminación dramática, profundidad visual y detalles coherentes con la historia.";
+    }
+
+    function buildPrompt(style, visualDescription, movement, format) {
+      return `${style}. Descripción visual: ${visualDescription} Movimiento: ${movement}. Cámara controlada. Formato ${format}. Composición clara y cinematográfica. Sin logotipos ni texto legible.`;
+    }
+
+    function generateScenes() {
+      const script = document.getElementById("script").value;
+      const format = document.getElementById("format").value;
+      const seconds = Number(document.getElementById("seconds").value);
+      const style = document.getElementById("style").value.trim();
+      const chunks = splitIntoScenes(script);
+
+      currentScenes = chunks.map((narration, index) => {
+        const movement = movements[index % movements.length];
+        const visualDescription = buildVisualDescription(narration);
+
+        return {
+          id: `${Date.now()}-${index}`,
+          number: index + 1,
+          duration_seconds: seconds,
+          narration,
+          visual_description: visualDescription,
+          movement,
+          format,
+          prompt: buildPrompt(style, visualDescription, movement, format)
+        };
+      });
+
+      render();
+    }
+
+    function render() {
+      renumberScenes();
+
+      const results = document.getElementById("results");
+      const totalSeconds = currentScenes.reduce((sum, scene) => sum + Number(scene.duration_seconds), 0);
+      const totalWords = currentScenes.reduce(
+        (sum, scene) => sum + scene.narration.trim().split(/\s+/).filter(Boolean).length,
+        0
+      );
+
+      document.getElementById("sceneCount").textContent = currentScenes.length;
+      document.getElementById("duration").textContent = `${totalSeconds} s`;
+      document.getElementById("wordCount").textContent = totalWords;
+
+      if (!currentScenes.length) {
+        results.innerHTML = '<div class="empty">Pega un guion y pulsa “Generar storyboard”.</div>';
+        return;
+      }
+
+      results.innerHTML = currentScenes.map((scene, index) => `
+        <article class="scene">
+          <div class="scene-head">
+            <div class="scene-title">Escena ${scene.number}</div>
+            <div class="badge">${scene.duration_seconds} s · ${escapeHtml(scene.format)}</div>
+          </div>
+
+          <p><b>Narración:</b> ${escapeHtml(scene.narration)}</p>
+
+          <p><b>Descripción visual:</b></p>
+          <div class="visual-box">${escapeHtml(scene.visual_description)}</div>
+
+          <p><b>Movimiento:</b> ${escapeHtml(scene.movement)}</p>
+
+          <div class="prompt">${escapeHtml(scene.prompt)}</div>
+
+          <div class="scene-actions">
+            <button class="secondary small-btn" onclick="copyScene(${index})">Copiar prompt</button>
+            <button class="secondary small-btn" onclick="toggleEditor(${index})">Editar</button>
+            <button class="secondary small-btn" onclick="moveScene(${index}, -1)">↑ Subir</button>
+            <button class="secondary small-btn" onclick="moveScene(${index}, 1)">↓ Bajar</button>
+            <button class="danger small-btn" onclick="deleteScene(${index})">Eliminar</button>
+          </div>
+
+          <div class="editor hidden" id="editor-${index}">
+            <label>Narración</label>
+            <textarea id="edit-narration-${index}">${escapeHtml(scene.narration)}</textarea>
+
+            <label>Descripción visual</label>
+            <textarea id="edit-visual-${index}">${escapeHtml(scene.visual_description)}</textarea>
+
+            <label>Movimiento</label>
+            <input id="edit-movement-${index}" value="${escapeHtml(scene.movement)}" />
+
+            <label>Duración en segundos</label>
+            <input id="edit-duration-${index}" type="number" min="1" max="30" value="${scene.duration_seconds}" />
+
+            <div class="actions">
+              <button class="primary small-btn" onclick="saveSceneEdit(${index})">Guardar cambios</button>
+              <button class="secondary small-btn" onclick="toggleEditor(${index})">Cancelar</button>
+            </div>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renumberScenes() {
+      currentScenes.forEach((scene, index) => {
+        scene.number = index + 1;
+      });
+    }
+
+    function toggleEditor(index) {
+      const editor = document.getElementById(`editor-${index}`);
+      if (editor) editor.classList.toggle("hidden");
+    }
+
+    function saveSceneEdit(index) {
+      const scene = currentScenes[index];
+      if (!scene) return;
+
+      const style = document.getElementById("style").value.trim();
+
+      scene.narration = document.getElementById(`edit-narration-${index}`).value.trim();
+      scene.visual_description = document.getElementById(`edit-visual-${index}`).value.trim();
+      scene.movement = document.getElementById(`edit-movement-${index}`).value.trim();
+      scene.duration_seconds = Math.max(1, Number(document.getElementById(`edit-duration-${index}`).value) || 1);
+      scene.prompt = buildPrompt(style, scene.visual_description, scene.movement, scene.format);
+
+      render();
+    }
+
+    function deleteScene(index) {
+      if (!confirm(`¿Eliminar la escena ${index + 1}?`)) return;
+      currentScenes.splice(index, 1);
+      render();
+    }
+
+    function moveScene(index, direction) {
+      const target = index + direction;
+      if (target < 0 || target >= currentScenes.length) return;
+
+      [currentScenes[index], currentScenes[target]] = [currentScenes[target], currentScenes[index]];
+      render();
+    }
+
+    async function copyScene(index) {
+      const scene = currentScenes[index];
+      if (!scene) return;
+
+      try {
+        await navigator.clipboard.writeText(scene.prompt);
+        alert(`Prompt de la escena ${scene.number} copiado.`);
+      } catch {
+        alert("No se pudo copiar automáticamente.");
       }
     }
-  });
-  return scenes;
-}
 
-function visualise(sentence) {
-  return sentence
-    .replace(/^En\s+\d{4},?\s*/i, "")
-    .replace(/aseguró que/i, "insinuando que")
-    .trim();
-}
+    async function copyAll() {
+      if (!currentScenes.length) {
+        alert("Genera primero el storyboard.");
+        return;
+      }
 
-function generateScenes() {
-  const script = document.getElementById("script").value;
-  const format = document.getElementById("format").value;
-  const seconds = Number(document.getElementById("seconds").value);
-  const style = document.getElementById("style").value.trim();
-  const chunks = splitIntoScenes(script);
+      const text = currentScenes.map(scene => (
+`ESCENA ${scene.number}
+Narración: ${scene.narration}
+Descripción visual: ${scene.visual_description}
+Movimiento: ${scene.movement}
+Duración: ${scene.duration_seconds} segundos
+Prompt: ${scene.prompt}`
+      )).join("\n\n");
 
-  currentScenes = chunks.map((narration, i) => {
-    const movement = movements[i % movements.length];
-    const visual = visualise(narration);
-    const prompt = `${style}. Escena: ${visual}. Movimiento: ${movement}. Cámara controlada. ${format}. Sin logotipos ni texto legible.`;
-    return {
-      number: i + 1,
-      duration_seconds: seconds,
-      narration,
-      visual,
-      movement,
-      format,
-      prompt
-    };
-  });
+      try {
+        await navigator.clipboard.writeText(text);
+        alert("Storyboard completo copiado.");
+      } catch {
+        alert("No se pudo copiar automáticamente.");
+      }
+    }
 
-  render();
-}
+    function downloadJSON() {
+      if (!currentScenes.length) return alert("Genera primero el storyboard.");
 
-function render() {
-  const results = document.getElementById("results");
-  document.getElementById("sceneCount").textContent = currentScenes.length;
-  document.getElementById("duration").textContent =
-    `${currentScenes.reduce((a,s) => a + s.duration_seconds, 0)} s`;
-  const words = currentScenes.reduce((a,s) => a + s.narration.split(/\s+/).length, 0);
-  document.getElementById("wordCount").textContent = words;
+      const payload = {
+        project: "StoryFlow AI",
+        created_at: new Date().toISOString(),
+        scenes: currentScenes
+      };
 
-  if (!currentScenes.length) {
-    results.innerHTML = '<div class="empty">Añade un guion para generar escenas.</div>';
-    return;
-  }
+      downloadFile("storyflow-storyboard.json", JSON.stringify(payload, null, 2), "application/json");
+    }
 
-  results.innerHTML = currentScenes.map(scene => `
-    <article class="scene">
-      <div class="scene-head">
-        <div class="scene-title">Escena ${scene.number}</div>
-        <div class="badge">${scene.duration_seconds} s · ${scene.format}</div>
-      </div>
-      <p><b>Narración:</b> ${escapeHtml(scene.narration)}</p>
-      <p><b>Movimiento:</b> ${escapeHtml(scene.movement)}</p>
-      <div class="prompt">${escapeHtml(scene.prompt)}</div>
-    </article>
-  `).join("");
-}
+    function downloadTXT() {
+      if (!currentScenes.length) return alert("Genera primero el storyboard.");
 
-function escapeHtml(value) {
-  return value.replace(/[&<>"']/g, c => ({
-    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;'
-  }[c]));
-}
+      const text = currentScenes.map(scene => (
+`ESCENA ${scene.number}
+NARRACIÓN:
+${scene.narration}
 
-async function copyAll() {
-  if (!currentScenes.length) return alert("Genera primero el storyboard.");
-  const text = currentScenes.map(s => `ESCENA ${s.number}\n${s.prompt}`).join("\n\n");
-  await navigator.clipboard.writeText(text);
-  alert("Prompts copiados.");
-}
+DESCRIPCIÓN VISUAL:
+${scene.visual_description}
 
-function downloadJSON() {
-  if (!currentScenes.length) return alert("Genera primero el storyboard.");
-  const blob = new Blob([JSON.stringify({project:"StoryFlow", scenes:currentScenes}, null, 2)], {type:"application/json"});
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "storyflow-storyboard.json";
-  link.click();
-  URL.revokeObjectURL(link.href);
-}
+MOVIMIENTO:
+${scene.movement}
 
-function loadDemo() {
-  document.getElementById("script").value =
-`Una llamada anónima llegó a la policía durante una noche de tormenta.
-El informante aseguró haber visto una luz encendida en la casa abandonada.
-Dos agentes avanzaron por el camino cubierto de barro.
-Al entrar, encontraron una mesa preparada para cuatro personas, pero la vivienda estaba vacía.
-En el piso superior, una vieja grabadora seguía reproduciendo una voz incomprensible.`;
-  generateScenes();
-}
+DURACIÓN:
+${scene.duration_seconds} segundos
 
-generateScenes();
-</script>
+PROMPT:
+${scene.prompt}
+`
+      )).join("\n----------------------------------------\n\n");
+
+      downloadFile("storyflow-storyboard.txt", text, "text/plain");
+    }
+
+    function downloadFile(filename, content, type) {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function saveProject() {
+      const project = {
+        script: document.getElementById("script").value,
+        format: document.getElementById("format").value,
+        seconds: document.getElementById("seconds").value,
+        style: document.getElementById("style").value,
+        scenes: currentScenes
+      };
+
+      localStorage.setItem("storyflow-project", JSON.stringify(project));
+      showStatus("Proyecto guardado en este dispositivo.");
+    }
+
+    function loadProject() {
+      const raw = localStorage.getItem("storyflow-project");
+
+      if (!raw) {
+        showStatus("No hay ningún proyecto guardado.");
+        return;
+      }
+
+      try {
+        const project = JSON.parse(raw);
+
+        document.getElementById("script").value = project.script || "";
+        document.getElementById("format").value = project.format || "vertical 9:16";
+        document.getElementById("seconds").value = project.seconds || "8";
+        document.getElementById("style").value = project.style || "";
+        currentScenes = Array.isArray(project.scenes) ? project.scenes : [];
+
+        render();
+        showStatus("Proyecto recuperado.");
+      } catch {
+        showStatus("No se pudo recuperar el proyecto guardado.");
+      }
+    }
+
+    function clearAll() {
+      if (!confirm("¿Vaciar el storyboard actual?")) return;
+      currentScenes = [];
+      render();
+    }
+
+    function showStatus(message) {
+      const node = document.getElementById("saveStatus");
+      node.textContent = message;
+      setTimeout(() => {
+        if (node.textContent === message) node.textContent = "";
+      }, 3000);
+    }
+
+    function loadDemo() {
+      document.getElementById("script").value =
+`En 1998, una operadora de emergencias recibió una llamada a las 3:17 de la madrugada.
+Al otro lado solo se escuchaba una respiración lenta y una puerta golpeando con el viento.
+La llamada provenía de un apartamento que llevaba seis meses vacío.
+Dos policías acudieron al edificio durante una tormenta.
+Dentro encontraron el teléfono descolgado y una taza de café todavía caliente.
+Mientras registraban las habitaciones, la central recibió otra llamada desde el mismo número.
+Una voz susurró que no miraran debajo de la cama.
+En el dormitorio encontraron una fotografía recién tomada de ellos mismos entrando en el apartamento.
+El reloj marcaba exactamente las 3:22.
+Entonces el teléfono comenzó a sonar otra vez, aunque la línea llevaba seis meses desconectada.`;
+
+      generateScenes();
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[character]));
+    }
+
+    loadDemo();
+  </script>
 </body>
 </html>
