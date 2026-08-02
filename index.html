@@ -1,1 +1,292 @@
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StoryFlow MVP</title>
+  <style>
+    :root {
+      --bg: #080b12;
+      --panel: #111724;
+      --panel2: #171f2e;
+      --text: #f4f7fb;
+      --muted: #9eabc0;
+      --accent: #7c5cff;
+      --border: #283247;
+      --ok: #56d6a1;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+      background: radial-gradient(circle at top, #17213a 0, var(--bg) 36%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .shell { max-width: 1000px; margin: auto; padding: 22px 16px 60px; }
+    header { padding: 12px 0 20px; }
+    .brand { font-size: 28px; font-weight: 850; letter-spacing: -0.8px; }
+    .brand span { color: #a995ff; }
+    .tagline { color: var(--muted); margin-top: 7px; line-height: 1.45; }
+    .grid { display: grid; gap: 16px; }
+    .panel {
+      background: rgba(17,23,36,.94);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 15px 40px rgba(0,0,0,.22);
+    }
+    label { display: block; font-weight: 700; margin: 0 0 8px; }
+    textarea, input, select {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: #0c111c;
+      color: var(--text);
+      border-radius: 12px;
+      padding: 13px;
+      font: inherit;
+      outline: none;
+    }
+    textarea { min-height: 230px; resize: vertical; line-height: 1.5; }
+    textarea:focus, input:focus, select:focus { border-color: var(--accent); }
+    .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+    .full { grid-column: 1 / -1; }
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    .primary { background: linear-gradient(135deg, #6b4cff, #927aff); color: white; }
+    .secondary { background: #232c40; color: white; border: 1px solid #35415a; }
+    .actions { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+    .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin: 14px 0; }
+    .stat { background: var(--panel2); padding: 12px; border-radius: 12px; border: 1px solid var(--border); }
+    .stat strong { display:block; font-size:22px; }
+    .stat small { color: var(--muted); }
+    #results { display: grid; gap: 12px; }
+    .scene { background: #0c111c; border: 1px solid var(--border); border-radius: 15px; padding: 14px; }
+    .scene-head { display:flex; align-items:center; justify-content:space-between; gap: 8px; margin-bottom:10px; }
+    .scene-title { font-weight: 850; }
+    .badge { color: var(--ok); background: rgba(86,214,161,.1); padding: 5px 8px; border-radius: 999px; font-size: 12px; }
+    .scene p { margin: 8px 0; color: #d7deeb; line-height:1.48; }
+    .scene b { color:white; }
+    .prompt {
+      background: #141b29;
+      border-left: 3px solid var(--accent);
+      padding: 10px;
+      border-radius: 8px;
+      color: #dfe5f1;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .empty { color: var(--muted); text-align:center; padding: 30px 10px; }
+    .note { color:var(--muted); font-size:13px; margin-top:10px; }
+    @media(min-width:800px){
+      .workspace { grid-template-columns: .9fr 1.1fr; align-items:start; }
+      .left { position: sticky; top: 16px; }
+    }
+    @media(max-width:560px){
+      .controls, .stats { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div class="brand">Story<span>Flow</span> MVP</div>
+      <div class="tagline">Convierte un guion en escenas, prompts visuales y movimientos listos para producción.</div>
+    </header>
+
+    <section class="grid workspace">
+      <div class="panel left">
+        <label for="script">Guion o narración</label>
+        <textarea id="script" placeholder="Pega aquí tu guion completo...">En 1971, un hombre misterioso subió a un avión en Portland usando un traje oscuro. Entregó una nota a una azafata y aseguró que llevaba una bomba. Exigió dinero y paracaídas. Horas después, saltó del avión durante una tormenta y desapareció para siempre.</textarea>
+
+        <div class="controls">
+          <div>
+            <label for="format">Formato</label>
+            <select id="format">
+              <option value="vertical 9:16">Vertical 9:16</option>
+              <option value="horizontal 16:9">Horizontal 16:9</option>
+              <option value="square 1:1">Cuadrado 1:1</option>
+            </select>
+          </div>
+          <div>
+            <label for="seconds">Segundos por escena</label>
+            <select id="seconds">
+              <option value="5">5 segundos</option>
+              <option value="8" selected>8 segundos</option>
+              <option value="10">10 segundos</option>
+            </select>
+          </div>
+          <div class="full">
+            <label for="style">Biblia visual</label>
+            <input id="style" value="cómic noir editorial, paleta azul-gris fría, líneas de tinta pesadas, textura de papel granulado, un único acento cálido, iluminación cinematográfica, sin texto" />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="primary" onclick="generateScenes()">Generar storyboard</button>
+          <button class="secondary" onclick="loadDemo()">Cargar ejemplo</button>
+        </div>
+        <div class="note">Esta primera versión funciona sin API y sin coste. La división es automática y editable.</div>
+      </div>
+
+      <div class="panel">
+        <div class="scene-head">
+          <div>
+            <div class="scene-title">Storyboard</div>
+            <div class="tagline">Resultado estructurado del proyecto</div>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><strong id="sceneCount">0</strong><small>escenas</small></div>
+          <div class="stat"><strong id="duration">0 s</strong><small>duración estimada</small></div>
+          <div class="stat"><strong id="wordCount">0</strong><small>palabras</small></div>
+        </div>
+
+        <div class="actions">
+          <button class="secondary" onclick="copyAll()">Copiar todos los prompts</button>
+          <button class="secondary" onclick="downloadJSON()">Exportar JSON</button>
+        </div>
+
+        <div id="results"><div class="empty">Pulsa “Generar storyboard” para comenzar.</div></div>
+      </div>
+    </section>
+  </main>
+
+<script>
+let currentScenes = [];
+
+const movements = [
+  "cámara fija, movimiento ambiental sutil",
+  "travelling lento hacia adelante",
+  "paneo lateral suave",
+  "primer plano con leve respiración de cámara",
+  "zoom lento y cinematográfico",
+  "plano general estático con elementos secundarios en movimiento"
+];
+
+function cleanText(t) {
+  return t.replace(/\s+/g, " ").trim();
+}
+
+function splitIntoScenes(text) {
+  const cleaned = cleanText(text);
+  if (!cleaned) return [];
+  let parts = cleaned.split(/(?<=[.!?])\s+/).filter(Boolean);
+
+  const scenes = [];
+  parts.forEach(part => {
+    const words = part.split(" ");
+    if (words.length <= 28) {
+      scenes.push(part);
+    } else {
+      for (let i = 0; i < words.length; i += 24) {
+        scenes.push(words.slice(i, i + 24).join(" "));
+      }
+    }
+  });
+  return scenes;
+}
+
+function visualise(sentence) {
+  return sentence
+    .replace(/^En\s+\d{4},?\s*/i, "")
+    .replace(/aseguró que/i, "insinuando que")
+    .trim();
+}
+
+function generateScenes() {
+  const script = document.getElementById("script").value;
+  const format = document.getElementById("format").value;
+  const seconds = Number(document.getElementById("seconds").value);
+  const style = document.getElementById("style").value.trim();
+  const chunks = splitIntoScenes(script);
+
+  currentScenes = chunks.map((narration, i) => {
+    const movement = movements[i % movements.length];
+    const visual = visualise(narration);
+    const prompt = `${style}. Escena: ${visual}. Movimiento: ${movement}. Cámara controlada. ${format}. Sin logotipos ni texto legible.`;
+    return {
+      number: i + 1,
+      duration_seconds: seconds,
+      narration,
+      visual,
+      movement,
+      format,
+      prompt
+    };
+  });
+
+  render();
+}
+
+function render() {
+  const results = document.getElementById("results");
+  document.getElementById("sceneCount").textContent = currentScenes.length;
+  document.getElementById("duration").textContent =
+    `${currentScenes.reduce((a,s) => a + s.duration_seconds, 0)} s`;
+  const words = currentScenes.reduce((a,s) => a + s.narration.split(/\s+/).length, 0);
+  document.getElementById("wordCount").textContent = words;
+
+  if (!currentScenes.length) {
+    results.innerHTML = '<div class="empty">Añade un guion para generar escenas.</div>';
+    return;
+  }
+
+  results.innerHTML = currentScenes.map(scene => `
+    <article class="scene">
+      <div class="scene-head">
+        <div class="scene-title">Escena ${scene.number}</div>
+        <div class="badge">${scene.duration_seconds} s · ${scene.format}</div>
+      </div>
+      <p><b>Narración:</b> ${escapeHtml(scene.narration)}</p>
+      <p><b>Movimiento:</b> ${escapeHtml(scene.movement)}</p>
+      <div class="prompt">${escapeHtml(scene.prompt)}</div>
+    </article>
+  `).join("");
+}
+
+function escapeHtml(value) {
+  return value.replace(/[&<>"']/g, c => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;'
+  }[c]));
+}
+
+async function copyAll() {
+  if (!currentScenes.length) return alert("Genera primero el storyboard.");
+  const text = currentScenes.map(s => `ESCENA ${s.number}\n${s.prompt}`).join("\n\n");
+  await navigator.clipboard.writeText(text);
+  alert("Prompts copiados.");
+}
+
+function downloadJSON() {
+  if (!currentScenes.length) return alert("Genera primero el storyboard.");
+  const blob = new Blob([JSON.stringify({project:"StoryFlow", scenes:currentScenes}, null, 2)], {type:"application/json"});
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "storyflow-storyboard.json";
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+function loadDemo() {
+  document.getElementById("script").value =
+`Una llamada anónima llegó a la policía durante una noche de tormenta.
+El informante aseguró haber visto una luz encendida en la casa abandonada.
+Dos agentes avanzaron por el camino cubierto de barro.
+Al entrar, encontraron una mesa preparada para cuatro personas, pero la vivienda estaba vacía.
+En el piso superior, una vieja grabadora seguía reproduciendo una voz incomprensible.`;
+  generateScenes();
+}
+
+generateScenes();
+</script>
+</body>
+</html>
